@@ -1,0 +1,48 @@
+INT Linha: 3, Coluna: 2
+MAIN Linha: 3, Coluna: 6
+LPAREN Linha: 3, Coluna: 10
+RPAREN Linha: 3, Coluna: 11
+LBRACE Linha: 3, Coluna: 13
+INT Linha: 4, Coluna: 6
+IDENTIFIER (a) Linha: 4, Coluna: 10
+SEMI Linha: 4, Coluna: 11
+IDENTIFIER (a) Linha: 5, Coluna: 6
+ASSIGN Linha: 5, Coluna: 8
+NUMBER (10) Linha: 5, Coluna: 10
+SEMI Linha: 5, Coluna: 12
+INT Linha: 6, Coluna: 6
+IDENTIFIER (b) Linha: 6, Coluna: 10
+SEMI Linha: 6, Coluna: 11
+IDENTIFIER (b) Linha: 7, Coluna: 6
+ASSIGN Linha: 7, Coluna: 8
+IDENTIFIER (a) Linha: 7, Coluna: 10
+PLUS Linha: 7, Coluna: 12
+NUMBER (5) Linha: 7, Coluna: 14
+TIMES Linha: 7, Coluna: 16
+NUMBER (2) Linha: 7, Coluna: 18
+SEMI Linha: 7, Coluna: 19
+IF Linha: 9, Coluna: 6
+LPAREN Linha: 9, Coluna: 9
+IDENTIFIER (a) Linha: 9, Coluna: 10
+LT Linha: 9, Coluna: 12
+IDENTIFIER (b) Linha: 9, Coluna: 14
+RPAREN Linha: 9, Coluna: 15
+LBRACE Linha: 9, Coluna: 17
+PRINT Linha: 10, Coluna: 10
+LPAREN Linha: 10, Coluna: 15
+IDENTIFIER (a) Linha: 10, Coluna: 16
+RPAREN Linha: 10, Coluna: 17
+SEMI Linha: 10, Coluna: 18
+RBRACE Linha: 11, Coluna: 6
+PRINT Linha: 13, Coluna: 6
+LPAREN Linha: 13, Coluna: 11
+IDENTIFIER (b) Linha: 13, Coluna: 12
+MINUS Linha: 13, Coluna: 14
+IDENTIFIER (a) Linha: 13, Coluna: 16
+RPAREN Linha: 13, Coluna: 17
+SEMI Linha: 13, Coluna: 18
+RETURN Linha: 15, Coluna: 6
+NUMBER (0) Linha: 15, Coluna: 13
+SEMI Linha: 15, Coluna: 14
+RBRACE Linha: 16, Coluna: 2
+EOF

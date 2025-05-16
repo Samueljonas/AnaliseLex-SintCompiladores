@@ -1,0 +1,29 @@
+Program (main body):
+Statements:
+    Declaration(type=int)
+      ID: Identifier(a)
+    Assignment:
+      To: Identifier(a)
+      Value: Number(10)
+    Declaration(type=int)
+      ID: Identifier(b)
+    Assignment:
+      To: Identifier(b)
+      Value: BinaryOp(+)
+      Value:   L: Identifier(a)
+      Value:   R: BinaryOp(*)
+      Value:   R:   L: Number(5)
+      Value:   R:   R: Number(2)
+    If:
+      Cond: BinaryOp(<)
+      Cond:   L: Identifier(a)
+      Cond:   R: Identifier(b)
+Then: Statements:
+      Then:   Print:
+      Then:     Arg: Identifier(a)
+    Print:
+      Arg: BinaryOp(-)
+      Arg:   L: Identifier(b)
+      Arg:   R: Identifier(a)
+    Return:
+      Value: Number(0)

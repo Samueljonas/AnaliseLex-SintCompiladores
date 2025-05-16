@@ -1,0 +1,143 @@
+// File: Parser.cup
+package meu_analisador_c;
+
+import java_cup.runtime.*;
+import meu_analisador_c.AST.*; // Importa todas as classes da AST
+import java.util.List;
+import java.util.ArrayList;
+
+
+parser code {:
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Erro de Sintaxe: ");
+        m.append(message);
+        if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {
+                m.append(" na linha "+(s.left+1));
+                if (s.right >= 0)
+                    m.append(", coluna "+(s.right+1));
+            }
+        }
+        System.err.println(m);
+    }
+
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        throw new RuntimeException("Erro fatal de sintaxe");
+    }
+:}
+
+// Declaração dos terminais (tokens)
+terminal            INT, MAIN, IF, PRINT, RETURN;
+terminal String     IDENTIFIER;
+terminal Integer    NUMBER;
+terminal            PLUS, MINUS, TIMES, DIVIDE;
+terminal            ASSIGN, EQ, LT, GT;
+terminal            LPAREN, RPAREN, LBRACE, RBRACE, SEMI;
+
+// Declaração dos não-terminais e seus tipos de retorno (nós da AST)
+non terminal ProgramNode        program;
+non terminal StatementsNode     statements_block, statement_list;
+non terminal StatementNode      statement;
+non terminal DeclarationNode    declaration_statement;
+non terminal AssignmentNode     assignment_statement;
+non terminal IfNode             if_statement;
+non terminal PrintNode          print_statement;
+non terminal ReturnNode         return_statement;
+non terminal ExpressionNode     expression, term, factor, condition;
+non terminal IdentifierNode     identifier_ref; // Para usar na AST
+
+// Precedência e associatividade dos operadores
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+precedence left LT, GT, EQ; // Para condições
+
+// Regra inicial da gramática
+start with program;
+
+// Regras da Gramática
+program ::= INT MAIN LPAREN RPAREN LBRACE statement_list:sl RBRACE
+            {: RESULT = new ProgramNode(sl); :}
+            ;
+
+statements_block ::= LBRACE statement_list:sl RBRACE
+            {: RESULT = sl; :}
+            ;
+
+statement_list ::= statement:s statement_list:sl
+            {: sl.statements.add(0, s); RESULT = sl; :} // Adiciona no início para manter a ordem
+            | /* empty */
+            {: RESULT = new StatementsNode(); :}
+            ;
+
+statement ::= declaration_statement:ds
+            {: RESULT = ds; :}
+            | assignment_statement:as
+            {: RESULT = as; :}
+            | if_statement:is
+            {: RESULT = is; :}
+            | print_statement:ps
+            {: RESULT = ps; :}
+            | return_statement:rs
+            {: RESULT = rs; :}
+            ;
+
+declaration_statement ::= INT IDENTIFIER:id SEMI
+            {: RESULT = new DeclarationNode("int", new IdentifierNode(id)); :}
+            ;
+
+assignment_statement ::= identifier_ref:id ASSIGN expression:e SEMI
+            {: RESULT = new AssignmentNode(id, e); :}
+            ;
+
+if_statement ::= IF LPAREN condition:c RPAREN statements_block:sb
+            {: RESULT = new IfNode(c, sb); :}
+            ;
+
+print_statement ::= PRINT LPAREN expression:e RPAREN SEMI
+            {: RESULT = new PrintNode(e); :}
+            ;
+
+return_statement ::= RETURN expression:e SEMI
+            {: RESULT = new ReturnNode(e); :}
+            ;
+
+expression ::= expression:e1 PLUS term:t
+            {: RESULT = new BinaryOpNode(e1, "+", t); :}
+            | expression:e1 MINUS term:t
+            {: RESULT = new BinaryOpNode(e1, "-", t); :}
+            | term:t
+            {: RESULT = t; :}
+            ;
+
+term ::= term:t1 TIMES factor:f
+            {: RESULT = new BinaryOpNode(t1, "*", f); :}
+            | term:t1 DIVIDE factor:f
+            {: RESULT = new BinaryOpNode(t1, "/", f); :}
+            | factor:f
+            {: RESULT = f; :}
+            ;
+
+factor ::= NUMBER:n
+            {: RESULT = new NumberNode(n); :}
+            | identifier_ref:id
+            {: RESULT = id; :}
+            | LPAREN expression:e RPAREN
+            {: RESULT = e; :}
+            ;
+
+condition ::= expression:e1 LT expression:e2
+            {: RESULT = new BinaryOpNode(e1, "<", e2); :}
+            | expression:e1 GT expression:e2
+            {: RESULT = new BinaryOpNode(e1, ">", e2); :}
+            | expression:e1 EQ expression:e2
+            {: RESULT = new BinaryOpNode(e1, "==", e2); :}
+            // Adicionar outros operadores de comparação se necessário
+            | expression:e // Permite uma expressão simples como condição (ex: if(var))
+            {: RESULT = e; :}
+            ;
+
+identifier_ref ::= IDENTIFIER:id
+            {: RESULT = new IdentifierNode(id); :}
+            ;
